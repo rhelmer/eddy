@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import argparse
 import logging
 import requests
 import subprocess
@@ -37,9 +38,21 @@ def testApp(appname):
 def main():
     logging.basicConfig(level=logging.INFO)
     logging.info('started')
-    # FIXME handle command-line args
-    loadApp(APPNAME)
-    testApp(APPNAME)
+    parser = argparse.ArgumentParser(
+        description='perf test third-party packaged FirefoxOS apps')
+    parser.add_argument('appname', help='name of app to test')
+    parser.add_argument('--download-only', const=True, nargs='?',
+                        help='download app from marketplace but do not test')
+    parser.add_argument('--test-only', const=True, nargs='?',
+                        help='test app but do not download from marketplace')
+    args = parser.parse_args()
+    if args.download_only:
+        loadApp(APPNAME)
+    elif args.test_only:
+        testApp(APPNAME)
+    else:
+        loadApp(APPNAME)
+        testApp(APPNAME)
 
 if __name__ == '__main__':
     main()
