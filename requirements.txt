@@ -1,8 +1,14 @@
+Flask==0.10.1
+Jinja2==2.7.1
 ManifestDestiny==0.5.7
+MarkupSafe==0.18
+Werkzeug==0.9.4
+argparse==1.2.1
 b2gperf==0.6
 datazilla==1.4
 gaiatest==0.12
 httplib2==0.8
+itsdangerous==0.23
 marionette-client==0.5.30
 mozcrash==0.8
 mozdevice==0.29

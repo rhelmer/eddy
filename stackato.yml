@@ -1,0 +1,7 @@
+name: eddy
+ignores: ['env', '.git', 'vendor']
+framework:
+  type: python
+  runtime: python26
+processes:
+  web: python web.py
