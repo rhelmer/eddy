@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import argparse
+import settings
 import logging
 import requests
 import subprocess
@@ -39,7 +40,13 @@ def testApp(appname):
     logging.info('run b2gperf with app: %s' % appname)
     # FIXME should this be importing b2gperf directly instead?
     # TODO switch to subprocess.check_output on python2.7+
-    p = subprocess.Popen(['env/bin/python', 'env/bin/b2gperf', appname],
+    p = subprocess.Popen(['env/bin/python', 'env/bin/b2gperf', appname,
+                          '--settle-time=%s' % settings.SETTLE_TIME,
+                          '--iterations=%s' % settings.ITERATIONS,
+                          '--dz-project=%s' % settings.DZ_PROJECT,
+                          '--dz-branch=%s' % settings.DZ_BRANCH,
+                          '--dz-key=%s' % settings.DZ_KEY,
+                          '--dz-secret=%s' % settings.DZ_SECRET],
                          stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = p.communicate()
     returncode = p.returncode

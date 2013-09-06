@@ -1,0 +1,6 @@
+SETTLE_TIME    = 60
+ITERATIONS     = 30
+DZ_PROJECT     = 'marketapps'
+DZ_BRANCH      = 'default'
+DZ_KEY         = 'key'
+DZ_SECRET      = 'secret'
