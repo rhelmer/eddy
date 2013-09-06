@@ -23,9 +23,24 @@ Or, run the web service (in standalone/dev mode):
 
 See ```eddy.wsgi``` if you want to run this from a WSGI server (Apache, etc)
 
+Jobs can be queued by passing the name of the application in the marketplace,
+such as:
+  http://localhost:5000/perf/startup?appname=stopwatch-1
+
+A task ID is returned, which can be used to query the status of a job:
+  http://localhost:5000/perf/status?task_id=84006869-3d4e-4a70-a291-6146fa030200
+
 The web service will push tasks into a queue using celery, which supports
 multiple backends. To actually run the test jobs on the phone, you must
-run at least one celery worker:
+configure celery (see tasks.py) and make sure it can connect to a supported
+backend.
+
+By default, eddy will try to connect to a local RabbitMQ install.
+Mac (homebrew) users can install it like this:
+  brew install rabbitmq
+
+Then run at least one celery worker:
   # make sure adb is on your path
   export PATH=$PATH:`pwd`/android-platform-tools
-  celery -A tasks worker --loglevel=info
+  # NOTE - one job per worker (i.e. per phone), and send events
+  celery -A tasks worker -c 1 -E --loglevel=info
