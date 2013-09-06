@@ -35,16 +35,7 @@ def loadApp(appname):
 
 def testApp(appname):
     logging.info('forward port for marionette')
-    try:
-        subprocess.check_call(['%s/adb' % ADB_PATH, 'kill-server'])
-        # TODO check output
-        subprocess.check_call(['%s/adb' % ADB_PATH,
-                               'forward','tcp:2828', 'tcp:2828'])
-    except subprocess.CalledProcessError, e:
-        logging.error('adb failed with error code: %s' % e.returncode)
-        logging.error('check that the phone is connected?')
-        raise
-
+    subprocess.check_call(['adb', 'forward','tcp:2828', 'tcp:2828'])
     logging.info('run b2gperf with app: %s' % appname)
     # FIXME should this be importing b2gperf directly instead?
     # TODO switch to subprocess.check_output on python2.7+
