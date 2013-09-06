@@ -10,7 +10,8 @@ app.debug = True
 def startup():
     appname = flask.request.args.get('appname', '')
     task_id = tasks.perftest.delay(appname)
-    return 'queued as task ID: %s' % task_id
+    return 'queued as task ID:' \
+           ' <a href="/perf/status?task_id=%s">%s</a>' % (task_id, task_id)
 
 @app.route('/perf/status')
 def status():
