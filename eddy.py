@@ -36,7 +36,9 @@ def loadApp(appname):
 def testApp(appname):
     logging.info('forward port for marionette')
     try:
-        subprocess.check_call(['%s/adb' % ADB_PATH, 'shell',
+        subprocess.check_call(['%s/adb' % ADB_PATH, 'kill-server'])
+        # TODO check output
+        subprocess.check_call(['%s/adb' % ADB_PATH,
                                'forward','tcp:2828', 'tcp:2828'])
     except subprocess.CalledProcessError, e:
         logging.error('adb failed with error code: %s' % e.returncode)
