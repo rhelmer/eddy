@@ -16,7 +16,8 @@ def startup():
 @app.route('/perf/status')
 def status():
     task_id = flask.request.args.get('task_id', '')
-    return tasks.celery.AsyncResult(task_id).state
+    result = tasks.celery.AsyncResult(task_id)
+    return 'Status: %s<pre>%s</pre>' % (result.status, result.result)
 
 if __name__ == '__main__':
     app.run()
