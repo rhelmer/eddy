@@ -38,6 +38,7 @@ def testApp(appname):
 def main():
     logging.basicConfig(level=logging.INFO)
     logging.info('started')
+
     parser = argparse.ArgumentParser(
         description='perf test third-party packaged FirefoxOS apps')
     parser.add_argument('appname', help='name of app to test')
@@ -46,6 +47,7 @@ def main():
     parser.add_argument('--test-only', const=True, nargs='?',
                         help='test app but do not download from marketplace')
     args = parser.parse_args()
+
     if args.download_only:
         loadApp(APPNAME)
     elif args.test_only:
