@@ -37,7 +37,7 @@ See ```eddy.wsgi``` if you want to run this from a WSGI server (Apache, etc)
 Jobs can be queued by passing the name of the application in the marketplace,
 such as:
 
-http://localhost:5000/perf/startup?appname=stopwatch-1
+curl -X POST -d 'appname=stopwatch-1' 'http://localhost:5000/perf/startup'
 
 A task ID is returned, which can be used to query the status of a job:
 

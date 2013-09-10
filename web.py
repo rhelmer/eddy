@@ -6,12 +6,11 @@ import tasks
 app = flask.Flask(__name__)
 app.debug = True
 
-@app.route('/perf/startup')
+@app.route('/perf/startup', methods=['POST'])
 def startup():
-    appname = flask.request.args.get('appname', '')
+    appname = flask.request.form.get('appname', '')
     task_id = tasks.perftest.delay(appname)
-    return 'queued as task ID:' \
-           ' <a href="/perf/status?task_id=%s">%s</a>' % (task_id, task_id)
+    return '%s' % task_id
 
 @app.route('/perf/status')
 def status():
