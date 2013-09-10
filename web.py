@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import flask
+import json
 import tasks
 
 app = flask.Flask(__name__)
@@ -15,8 +16,13 @@ def startup():
 @app.route('/perf/status')
 def status():
     task_id = flask.request.args.get('task_id', '')
-    result = tasks.celery.AsyncResult(task_id)
-    return 'Status: %s<pre>%s</pre>' % (result.status, result.result)
+    if not task_id:
+        result = tasks.celery.control.inspect()
+    else:
+        result = tasks.celery.AsyncResult(task_id)
+
+    return flask.Response(json.dumps(result.scheduled()),
+                          mimetype='application/json')
 
 if __name__ == '__main__':
     app.run()

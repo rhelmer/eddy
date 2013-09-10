@@ -8,6 +8,7 @@ import subprocess
 import tempfile
 
 BASEURL='https://marketplace.firefox.com/api/v1/apps/app'
+#BASEURL='http://localhost:8000/api/v1/apps/app'
 ADB_PATH='/Users/rhelmer/src/android-platform-tools/'
 
 def loadApp(appname):
