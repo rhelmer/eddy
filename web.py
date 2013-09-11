@@ -15,13 +15,17 @@ def startup():
 
 @app.route('/perf/status')
 def status():
-    task_id = flask.request.args.get('task_id', '')
-    if not task_id:
-        result = tasks.celery.control.inspect()
-    else:
-        result = tasks.celery.AsyncResult(task_id)
+    appname = flask.request.args.get('appname', '')
+    result = {'running': False}
+    active = tasks.celery.control.inspect().active()
+    reserved = tasks.celery.control.inspect().reserved()
+    for queue in (reserved, active):
+        for key in queue:
+            for job in queue[key]:
+                if appname in job['args']:
+                    result['running'] = True
 
-    return flask.Response(json.dumps(result.scheduled()),
+    return flask.Response(json.dumps(result),
                           mimetype='application/json')
 
 if __name__ == '__main__':
