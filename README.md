@@ -43,6 +43,10 @@ A task ID is returned, which can be used to query the status of a job:
 
 http://localhost:5000/perf/status?task_id=84006869-3d4e-4a70-a291-6146fa030200
 
+Or, to see if a test job for the app in question has already been queued:
+
+http://localhost:5000/perf/status?appname=stopwatch-1
+
 The web service will push tasks into a queue using celery, which supports
 multiple backends. To actually run the test jobs on the phone, you must
 configure celery (see tasks.py) and make sure it can connect to a supported
