@@ -6,6 +6,7 @@ import logging
 import requests
 import subprocess
 import tempfile
+import json
 
 BASEURL='https://marketplace.firefox.com/api/v1/apps/app'
 #BASEURL='http://localhost:8000/api/v1/apps/app'
@@ -23,6 +24,19 @@ def loadApp(appname):
     app_url = manifest_request.json()['package_path']
     manifest_request.close()
 
+    logging.info('create appdir on device')
+    subprocess.check_call(['adb', 'shell', 'mkdir',
+        '/data/local/webapps/%s' % appname])
+
+    with tempfile.NamedTemporaryFile() as temp:
+        for chunk in manifest_request.iter_content(chunk_size=1024):
+            if chunk:
+                temp.write(chunk)
+                temp.flush()
+        logging.info('load manifest onto device')
+        subprocess.check_call(['adb', 'push', temp.name,
+            '/data/local/webapps/%s/manifest.webapp' % appname])
+
     app_request = requests.get(app_url, stream=True)
     logging.info('downloading app')
     with tempfile.NamedTemporaryFile() as temp:
@@ -30,8 +44,35 @@ def loadApp(appname):
             if chunk:
                 temp.write(chunk)
                 temp.flush()
-        # TODO actually load onto phone...
-        logging.info('TODO actually load %s onto phone...' % temp.name)
+        logging.info('load app onto device')
+        subprocess.check_call(['adb', 'push', temp.name,
+            '/data/local/webapps/%s/application.zip' % appname])
+
+    subprocess.check_call(['adb', 'pull',
+        '/data/local/webapps/webapps.json', '.'])
+    with open('webapps.json', 'r') as f:
+        webapps = json.loads(f.read())
+
+    webapps[appname] = {
+        'origin': 'app://%s' % appname,
+        'installOrigin': 'app://%s' % appname,
+        'manifestURL': 'app://%s/manifest.webapp' % appname,
+        'appStatus': 1,
+        'installTime': 1379012730464,
+        'installState': 'installed',
+        'removable': True,
+        'id': appname,
+        'basePath': '/data/local/webapps',
+        'localId': 1042,
+        'name': 'Stopwatch'
+    }
+
+    with open('webapps-new.json', 'w') as f:
+        f.write(json.dumps(webapps))
+
+    subprocess.check_call(['adb', 'push', 'webapps-new.json',
+        '/data/local/webapps/webapps.json'])
+    subprocess.check_call(['adb', 'reboot'])
 
     return name
 
