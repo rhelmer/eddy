@@ -60,6 +60,11 @@ def loadApp(appname):
     with open('webapps.json', 'r') as f:
         webapps = json.loads(f.read())
 
+    if appname in webapps:
+        del webapps[appname]
+
+    localId = max([v['localId'] for k,v in webapps.iteritems()]) + 1
+
     webapps[appname] = {
         'origin': 'app://%s' % appname,
         'installOrigin': 'app://%s' % appname,
@@ -70,7 +75,7 @@ def loadApp(appname):
         'removable': True,
         'id': appname,
         'basePath': '/data/local/webapps',
-        'localId': 1042,
+        'localId': localId,
         'name': 'Stopwatch'
     }
 
