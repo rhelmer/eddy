@@ -33,6 +33,13 @@ def loadApp(appname):
             if chunk:
                 temp.write(chunk)
                 temp.flush()
+        logging.info('add location_path to webapp.manifest')
+        with open(temp.name, 'r+') as f:
+            manifest_json = json.loads(f.read())
+            if 'launch_path' not in manifest_json:
+                manifest_json['launch_path'] = '/index.html'
+                f.seek(0)
+                f.write(json.dumps(manifest_json))
         logging.info('load manifest onto device')
         subprocess.check_call(['adb', 'push', temp.name,
             '/data/local/webapps/%s/manifest.webapp' % appname])
@@ -72,7 +79,6 @@ def loadApp(appname):
 
     subprocess.check_call(['adb', 'push', 'webapps-new.json',
         '/data/local/webapps/webapps.json'])
-    subprocess.check_call(['adb', 'reboot'])
 
     return name
 
