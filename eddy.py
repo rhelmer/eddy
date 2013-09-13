@@ -117,13 +117,13 @@ def main():
     parser = argparse.ArgumentParser(
         description='perf test third-party packaged FirefoxOS apps')
     parser.add_argument('appname', help='name of app to test')
-    parser.add_argument('--download-only', const=True, nargs='?',
-                        help='download app from marketplace but do not test')
-    parser.add_argument('--test-only', const=True, nargs='?',
-                        help='test app but do not download from marketplace')
+    parser.add_argument('--load-only', action='store_true',
+        help='load app from marketplace onto device but do not test')
+    parser.add_argument('--test-only', action='store_true',
+        help='test already-installed app')
     args = parser.parse_args()
 
-    if args.download_only:
+    if args.load_only:
         loadApp(args.appname)
     elif args.test_only:
         testApp(args.appname)
