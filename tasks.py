@@ -7,6 +7,6 @@ celery = Celery('perf', backend='amqp', broker=BROKER_URL)
 
 @celery.task
 def perftest(appname):
-    name = eddy.loadApp(appname)
-    results = eddy.testApp(name)
+    name, slug = eddy.loadApp(appname)
+    results = eddy.testApp(name, slug)
     return results
