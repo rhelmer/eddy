@@ -1,6 +1,8 @@
 SETTLE_TIME    = 60
 ITERATIONS     = 30
+DZ_URL         = 'https://datazilla.mozilla.org/marketapps'
 DZ_PROJECT     = 'marketapps'
 DZ_BRANCH      = 'default'
 DZ_KEY         = 'key'
 DZ_SECRET      = 'secret'
+MKT_API_URL    = 'https://marketplace.firefox.com/api/v1/apps/app'

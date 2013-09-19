@@ -8,12 +8,10 @@ import subprocess
 import tempfile
 import json
 
-BASEURL='https://marketplace.firefox.com/api/v1/apps/app'
-#BASEURL='http://localhost:8000/api/v1/apps/app'
 ADB_PATH='/Users/rhelmer/src/android-platform-tools/'
 
 def loadApp(app_slug):
-    market_request = requests.get('%s/%s' % (BASEURL, app_slug))
+    market_request = requests.get('%s/%s' % (settings.MKT_API_URL, app_slug))
     logging.info('requesting app manifest from marketplace')
     manifest_url = market_request.json()['manifest_url']
     app_name = market_request.json()['name']
@@ -85,7 +83,7 @@ def loadApp(app_slug):
     subprocess.check_call(['adb', 'push', 'webapps-new.json',
         '/data/local/webapps/webapps.json'])
 
-    return app_name
+    return app_name, app_slug
 
 def testApp(app_name, app_slug):
     logging.info('forward port for marionette')
@@ -96,6 +94,7 @@ def testApp(app_name, app_slug):
     p = subprocess.Popen(['env/bin/python', 'env/bin/b2gperf', app_name,
                           '--settle-time=%s' % settings.SETTLE_TIME,
                           '--iterations=%s' % settings.ITERATIONS,
+                          '--dz-url=%s' % settings.DZ_URL,
                           '--dz-project=%s' % settings.DZ_PROJECT,
                           '--dz-branch=%s' % settings.DZ_BRANCH,
                           '--dz-test-suite=%s' % app_slug,
@@ -120,14 +119,14 @@ def main():
     parser.add_argument('appname', help='name of app to test')
     parser.add_argument('--load-only', action='store_true',
         help='load app from marketplace onto device but do not test')
-    parser.add_argument('--test-only', action='store_true',
-        help='test already-installed app')
+    #parser.add_argument('--test-only', action='store_true',
+    #    help='test already-installed app')
     args = parser.parse_args()
 
     if args.load_only:
         loadApp(args.appname)
-    elif args.test_only:
-        testApp(args.appname)
+    #elif args.test_only:
+    #    testApp(args.appname)
     else:
         app_name, app_slug = loadApp(args.appname)
         testApp(app_name, app_slug)
