@@ -98,6 +98,7 @@ def testApp(app_name, app_slug):
                           '--iterations=%s' % settings.ITERATIONS,
                           '--dz-project=%s' % settings.DZ_PROJECT,
                           '--dz-branch=%s' % settings.DZ_BRANCH,
+                          '--dz-test-suite=%s' % app_slug,
                           '--dz-key=%s' % settings.DZ_KEY,
                           '--dz-secret=%s' % settings.DZ_SECRET],
                          stdout=subprocess.PIPE, stderr=subprocess.PIPE)
