@@ -13,6 +13,11 @@ def startup():
     task_id = tasks.perftest.delay(appname)
     return '%s' % task_id
 
+# provide a route for non-celery consumers to pop a task
+@app.route('/perf/consume', methods=['GET'])
+def consume():
+    return tasks.consume_one()
+
 @app.route('/perf/status')
 def status():
     task_id = flask.request.args.get('task_id', '')
