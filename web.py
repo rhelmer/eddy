@@ -16,7 +16,7 @@ def startup():
 # provide a route for non-celery consumers to pop a task
 @app.route('/perf/consume', methods=['GET'])
 def consume():
-    return tasks.consume_one()
+    return json.dumps(tasks.consume_one())
 
 @app.route('/perf/status')
 def status():

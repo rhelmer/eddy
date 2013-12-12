@@ -21,6 +21,6 @@ def consume_one():
     msg = get_one_message(app, 'celery')
     if msg:
         msg.ack()
-        return str(msg.payload)
+        return msg.payload
     else:
-        return ""
+        return None
